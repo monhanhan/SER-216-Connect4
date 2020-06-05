@@ -41,8 +41,11 @@ public class Connect4TextConsole {
 		player = 'O';
 	    }
 
+	    // This is if statement enables a computer turn if the player has opted to play
+	    // against a computer and if it is the computer's turn.
 	    if ((player == 'O') && playComputer) {
 		Connect4ComputerPlayer.takeTurn(myGame, player);
+
 	    } else {
 		takeTurn(player, myScanner, myGame);
 
