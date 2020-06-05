@@ -3,6 +3,7 @@ package ui;
 import java.util.Scanner;
 
 import core.Connect4;
+import core.Connect4ComputerPlayer;
 
 /**
  * 
@@ -26,6 +27,8 @@ public class Connect4TextConsole {
 	char player = 'Q';
 	Scanner myScanner = new Scanner(System.in);
 
+	boolean playComputer = playComputer(myScanner);
+
 	boolean isGameOver = false;
 	boolean victory = false;
 
@@ -38,7 +41,12 @@ public class Connect4TextConsole {
 		player = 'O';
 	    }
 
-	    takeTurn(player, myScanner, myGame);
+	    if ((player == 'O') && playComputer) {
+		Connect4ComputerPlayer.takeTurn(myGame, player);
+	    } else {
+		takeTurn(player, myScanner, myGame);
+
+	    }
 
 	    // Check end game conditions.
 	    victory = myGame.checkVictory();
@@ -55,6 +63,44 @@ public class Connect4TextConsole {
 	// Close down the game.
 	myScanner.close();
 	System.exit(0);
+
+    }
+
+    /**
+     * This method takes player input for whether or not a player wants to play
+     * against a computer. The method will continue prompting until it receives
+     * either a 'C' or a 'P'. Input can be upper or lower case with any number of
+     * spaces.
+     * 
+     * @param myScanner is a scanner object taking input from the console.
+     * @return is a boolean representing whether the player wants to play against a
+     *         computer.
+     */
+    private static boolean playComputer(Scanner myScanner) {
+	boolean badInput = true;
+	boolean playComputer = false;
+
+	while (badInput) {
+	    System.out
+		    .print("Enter 'P' if you want to play against another player; enter 'C' to play against computer.");
+	    System.out.println();
+	    System.out.println();
+	    System.out.print(">>");
+	    System.out.println();
+	    System.out.println();
+
+	    String myInput = myScanner.next();
+
+	    // Cleaning string.
+	    myInput = myInput.toUpperCase().trim();
+
+	    if ((myInput.equals("C")) || (myInput.equals("P"))) {
+		badInput = false;
+		playComputer = (myInput.equals("C"));
+	    }
+	}
+
+	return playComputer;
 
     }
 
