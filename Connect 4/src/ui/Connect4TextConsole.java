@@ -89,10 +89,11 @@ public class Connect4TextConsole {
 	    System.out.println();
 	    System.out.println();
 	    System.out.print(">>");
-	    System.out.println();
-	    System.out.println();
 
 	    String myInput = myScanner.next();
+
+	    System.out.println();
+	    System.out.println();
 
 	    // Cleaning string.
 	    myInput = myInput.toUpperCase().trim();
