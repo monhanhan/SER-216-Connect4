@@ -29,6 +29,10 @@ public class Connect4TextConsole {
 
 	boolean playComputer = playComputer(myScanner);
 
+	if (playComputer) {
+	    System.out.println("Start game against computer.");
+	}
+
 	boolean isGameOver = false;
 	boolean victory = false;
 

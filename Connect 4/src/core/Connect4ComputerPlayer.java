@@ -29,7 +29,7 @@ public class Connect4ComputerPlayer {
 	System.out.println("Computer turn");
 	System.out.print("The computer has placed a peice in column ");
 
-	int placedCol = currCol + 1;
+	int placedCol = currCol;
 
 	System.out.println(placedCol);
 
