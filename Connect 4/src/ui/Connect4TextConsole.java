@@ -7,7 +7,7 @@ import core.Connect4;
 /**
  * 
  * @author Ryan Munin
- * @version 1.0
+ * @version 2.0
  *
  */
 public class Connect4TextConsole {
