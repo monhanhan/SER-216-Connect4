@@ -144,7 +144,7 @@ public class Connect4TextConsole {
 	    try {
 		inInt = Integer.parseInt(input);
 
-	    } catch (Exception e) {
+	    } catch (Exception notValidInput) {
 		continue;
 
 	    }
