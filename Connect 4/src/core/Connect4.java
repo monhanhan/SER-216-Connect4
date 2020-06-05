@@ -26,6 +26,7 @@ public class Connect4 {
 	    }
 	}
 	this.filledSpots = 0;
+
 	this.totalSpots = 42;
 
     }
