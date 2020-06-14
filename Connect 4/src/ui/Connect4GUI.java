@@ -11,6 +11,9 @@ public class Connect4GUI extends Application {
 
     // TODO: these seem arbitrary. Be sure to check that these actually make sense
     // in practice.
+
+    // These exist here so that I don't have any magic numbers and to make changing
+    // the scale easier if I need to do that later.
     private final int PANESIZE = 384;
     private final int INSET = 8;
     private final int TILESIZE = 46;
