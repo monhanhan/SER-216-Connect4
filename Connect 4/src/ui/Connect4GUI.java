@@ -6,7 +6,6 @@ import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Alert.AlertType;
-import javafx.scene.control.MenuButton;
 import javafx.scene.layout.Background;
 import javafx.scene.layout.BackgroundFill;
 import javafx.scene.layout.Border;
@@ -45,18 +44,31 @@ public class Connect4GUI extends Application {
 
     }
 
+    // TODO: can this be folded into start? Why do I have it here specifically?
     public void playGame(Stage primaryStage) {
-	// TODO: can this be folded into start? Why do I have it here specifically?
 	BorderPane myBorders = makeBorders();
 
 	Scene myScene = new Scene(myBorders);
 
 	makeMoves(myScene);
 
-	primaryStage.setTitle("Reversi");
+	primaryStage.setTitle("Connect 4");
 	primaryStage.setScene(myScene);
 	this.primaryStage = primaryStage;
 	primaryStage.show();
+
+    }
+
+    private BorderPane makeBorders() {
+	TilePane myTiles = makePanes();
+	myTiles.setMaxSize(PANESIZE, PANESIZE);
+	myTiles.setMinSize(PANESIZE, PANESIZE);
+
+	BorderPane myBorders = new BorderPane();
+
+	myBorders.setCenter(myTiles);
+
+	return myBorders;
 
     }
 
@@ -99,42 +111,6 @@ public class Connect4GUI extends Application {
 	    }
 	}
 	return myTiles;
-
-    }
-
-    private BorderPane makeBorders() {
-	TilePane myTiles = makePanes();
-	myTiles.setMaxSize(PANESIZE, PANESIZE);
-	myTiles.setMinSize(PANESIZE, PANESIZE);
-
-	BorderPane myBorders = new BorderPane();
-
-	int[] scoreArray = myController.getScore();
-	String scoreString = "White: " + scoreArray[0] + " - Black: " + scoreArray[1];
-
-	Label score = new Label(scoreString);
-
-	myBorders.setBottom(score);
-	myBorders.setCenter(myTiles);
-
-	MenuButton myMenu = new MenuButton("File");
-	MenuItem newGame = new MenuItem("New Game");
-
-	// This allows you to start a new game at any time.
-	newGame.setOnAction((pressed) -> {
-	    this.myModel = new ReversiModel();
-	    this.myController = new ReversiController(myModel);
-	    this.myBoard = myModel.getReversiBoard();
-	    update(myModel, myBoard);
-	    File file = new File("save_data.dat");
-	    if (file.exists()) {
-		file.delete();
-	    }
-	});
-
-	myMenu.getItems().add(newGame);
-	myBorders.setTop(myMenu);
-	return myBorders;
 
     }
 
