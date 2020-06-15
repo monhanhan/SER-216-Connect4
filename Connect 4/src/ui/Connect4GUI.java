@@ -1,11 +1,16 @@
 package ui;
 
+import java.util.Optional;
+
 import core.Connect4;
 import core.Connect4ComputerPlayer;
 import javafx.application.Application;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
+import javafx.scene.control.Alert;
+import javafx.scene.control.Alert.AlertType;
+import javafx.scene.control.ButtonType;
 import javafx.scene.layout.Background;
 import javafx.scene.layout.BackgroundFill;
 import javafx.scene.layout.Border;
@@ -29,7 +34,7 @@ public class Connect4GUI extends Application {
     // in practice.
     // These exist here so that I don't have any magic numbers and to make changing
     // the scale easier if I need to do that later.
-    private final int PANESIZE = 384;
+    private final int PANESIZE = 338;
     private final int INSET = 8;
     private final int TILESIZE = 46;
 
@@ -37,9 +42,28 @@ public class Connect4GUI extends Application {
     public void start(Stage primaryStage) throws Exception {
 	this.myBoard = new Connect4();
 
-	// TODO: put in logic here to prompt the player whether they would like to play
-	// vs a pc.
-	this.computerPlayer = false;
+	boolean choiceMade = false;
+
+	while (!choiceMade) {
+	    Alert computerChoice = new Alert(Alert.AlertType.CONFIRMATION);
+	    computerChoice.setTitle("Play against computer");
+	    computerChoice.setHeaderText("Press ok to play against a computer or cancel to play against a human");
+	    computerChoice.setContentText(
+		    "If you close this window without making a choice, you will play against a human by default.");
+
+	    Optional<ButtonType> result = computerChoice.showAndWait();
+	    ButtonType button = result.orElse(ButtonType.CANCEL);
+
+	    if (button == ButtonType.OK) {
+		choiceMade = true;
+		this.computerPlayer = true;
+
+	    } else if (button == ButtonType.CANCEL) {
+		choiceMade = true;
+		this.computerPlayer = false;
+	    }
+
+	}
 
 	this.redTurn = true;
 
@@ -47,7 +71,6 @@ public class Connect4GUI extends Application {
 
     }
 
-    // TODO: can this be folded into start? Why do I have it here specifically?
     public void playGame(Stage primaryStage) {
 	BorderPane myBorders = makeBorders();
 
@@ -59,6 +82,7 @@ public class Connect4GUI extends Application {
 	primaryStage.setScene(myScene);
 	this.primaryStage = primaryStage;
 	primaryStage.show();
+	checkGameOver(myScene);
 
     }
 
@@ -120,49 +144,52 @@ public class Connect4GUI extends Application {
     private void makeMoves(Scene myScene) {
 	if (redTurn) {
 	    takeHumanTurn('X', myScene);
-	    playGame(primaryStage);
 
 	} else if (!redTurn && computerPlayer) {
-	    Connect4ComputerPlayer.takeTurn(myBoard, 'O');
-	    playGame(primaryStage);
+	    computerTurn(myScene);
 
 	} else {
 	    takeHumanTurn('O', myScene);
-	    playGame(primaryStage);
 
-	    // TODO: this block needs to be adapted for the win/loss/tie condition of this
-	    // game.
-	    /**
-	     * // If no one has a move, the game is over. } else { Alert gameOver = new
-	     * Alert(AlertType.INFORMATION); gameOver.setTitle("Game Over");
-	     * 
-	     * int[] score = myController.getScore();
-	     * 
-	     * if (score[0] > score[1]) { gameOver.setHeaderText("You win");
-	     * gameOver.setContentText("Even a broken watch is right twice a day.");
-	     * 
-	     * } else if (score[0] < score[1]) { gameOver.setHeaderText("You lose!");
-	     * gameOver.setContentText("You always were a dissapointment");
-	     * 
-	     * } else { gameOver.setHeaderText("You tie"); gameOver.setContentText("I am
-	     * deeply unsatisfied with this outcome."); }
-	     * 
-	     * gameOver.showAndWait();
-	     * 
-	     * }
-	     */
+	}
 
-	    return;
+    }
+
+    private void computerTurn(Scene myScene) {
+	Connect4ComputerPlayer.takeTurn(myBoard, 'O');
+	redTurn = true;
+	playGame(primaryStage);
+    }
+
+    private void checkGameOver(Scene myScene) {
+	boolean win = myBoard.checkVictory();
+	boolean tie = myBoard.checkTie();
+
+	if (win || tie) {
+	    Alert gameOver = new Alert(AlertType.INFORMATION);
+	    gameOver.setTitle("Game Over");
+
+	    if (tie) {
+		gameOver.setHeaderText("You Tie");
+
+	    } else if (!redTurn) {
+		gameOver.setHeaderText("Red Wins!");
+
+	    } else {
+		gameOver.setHeaderText("Blue Wins!");
+
+	    }
+
+	    gameOver.showAndWait();
+	    System.exit(0);
 
 	}
 
     }
 
     private void takeHumanTurn(char player, Scene myScene) {
-	// TODO: edit so that we don't look for the y element except as a check for out
-	// of bounds.
 
-	// This makes it so that when the player clicks a square they get to
+	// This makes it so that when the player clicks a column they get to
 	// make a move.
 	myScene.setOnMouseClicked((event) -> {
 	    int x = (int) Math.round(event.getSceneX());
@@ -174,9 +201,11 @@ public class Connect4GUI extends Application {
 		// This converts the click from pixels to grid position.
 		int mathX = (x - INSET) / TILESIZE;
 
-		// TODO: modify this for error checking.
-		myBoard.addPiece(mathX, player);
-		redTurn = false;
+		if (myBoard.addPiece(mathX, player)) {
+		    redTurn = !redTurn;
+		    playGame(primaryStage);
+
+		}
 
 	    }
 

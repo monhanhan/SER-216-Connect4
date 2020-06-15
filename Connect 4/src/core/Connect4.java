@@ -37,6 +37,10 @@ public class Connect4 {
      *         have been met.
      */
     public boolean checkVictory() {
+	if (board[lastPosY][lastPosX] == ' ') {
+	    return false;
+	}
+
 	return (checkDown() || checkLeft() || checkRight() || checkUL() || checkUR() || checkDL() || checkDR());
 
     }
