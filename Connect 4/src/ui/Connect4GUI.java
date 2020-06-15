@@ -82,8 +82,8 @@ public class Connect4GUI extends Application {
 
 	myTiles.setBackground(new Background(new BackgroundFill(Color.GREEN, null, null)));
 
-	for (int i = 0; i < 8; i++) {
-	    for (int j = 0; j < 8; j++) {
+	for (int i = 0; i < 6; i++) {
+	    for (int j = 0; j < 7; j++) {
 		StackPane tempPane = new StackPane();
 
 		tempPane.setBorder(new Border(new BorderStroke(Color.BLACK, BorderStrokeStyle.SOLID, null, null)));
