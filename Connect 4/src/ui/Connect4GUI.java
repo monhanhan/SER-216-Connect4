@@ -42,28 +42,25 @@ public class Connect4GUI extends Application {
     public void start(Stage primaryStage) throws Exception {
 	this.myBoard = new Connect4();
 
-	
-	    Alert computerChoice = new Alert(Alert.AlertType.CONFIRMATION);
-	    computerChoice.setTitle("Play against computer");
-	    computerChoice.setHeaderText("Press ok to play against a computer or cancel to play against a human");
-	    computerChoice.setContentText(
-		    "If you close this window without making a choice, you will play against a human by default.");
+	Alert computerChoice = new Alert(Alert.AlertType.CONFIRMATION);
+	computerChoice.setTitle("Play against computer");
+	computerChoice.setHeaderText("Press ok to play against a computer or cancel to play against a human");
+	computerChoice.setContentText(
+		"If you close this window without making a choice, you will play against a human by default.");
 
-	    Optional<ButtonType> result = computerChoice.showAndWait();
-	    ButtonType button = result.orElse(ButtonType.CANCEL);
+	Optional<ButtonType> result = computerChoice.showAndWait();
+	ButtonType button = result.orElse(ButtonType.CANCEL);
 
-	    if (button == ButtonType.OK) {
-		this.computerPlayer = true;
+	if (button == ButtonType.OK) {
+	    this.computerPlayer = true;
 
-	    } else if (button == ButtonType.CANCEL) {
-		this.computerPlayer = false;
-	    }
+	} else if (button == ButtonType.CANCEL) {
+	    this.computerPlayer = false;
+	}
 
-	
+	this.redTurn = true;
 
-    this.redTurn=true;
-
-    playGame(primaryStage);
+	playGame(primaryStage);
 
     }
 
@@ -137,25 +134,10 @@ public class Connect4GUI extends Application {
 
     }
 
-    private void makeMoves(Scene myScene) {
-	if (redTurn) {
-	    takeHumanTurn('X', myScene);
-
-	} else if (!redTurn && computerPlayer) {
-	    computerTurn(myScene);
-
-	} else {
-	    takeHumanTurn('O', myScene);
-
-	}
-
-    }
-
     private void computerTurn(Scene myScene) {
 	Connect4ComputerPlayer.takeTurn(myBoard, 'O');
 	redTurn = true;
-	System.out.println("We reached this spot!");
-	playGame(primaryStage);
+
     }
 
     private void checkGameOver(Scene myScene) {
@@ -184,7 +166,14 @@ public class Connect4GUI extends Application {
 
     }
 
-    private void takeHumanTurn(char player, Scene myScene) {
+    private void makeMoves(Scene myScene) {
+	char player;
+	if (redTurn) {
+	    player = 'X';
+
+	} else {
+	    player = 'O';
+	}
 
 	// This makes it so that when the player clicks a column they get to
 	// make a move.
@@ -199,7 +188,12 @@ public class Connect4GUI extends Application {
 		int mathX = (x - INSET) / TILESIZE;
 
 		if (myBoard.addPiece(mathX, player)) {
+
 		    redTurn = !redTurn;
+		    if (computerPlayer) { // TODO: the devil lives here.
+			computerTurn(myScene);
+		    }
+
 		    playGame(primaryStage);
 
 		}
