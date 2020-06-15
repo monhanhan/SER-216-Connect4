@@ -2,6 +2,7 @@ package ui;
 
 import core.Connect4;
 import javafx.application.Application;
+import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.control.Alert;
@@ -89,14 +90,14 @@ public class Connect4GUI extends Application {
 
 		Circle myCirc = new Circle();
 
-		if (currBoard[i][j] == 'B') {
-		    myCirc.setFill(Color.BLACK);
+		if (currBoard[i][j] == 'X') {
+		    myCirc.setFill(Color.RED);
 
-		} else if (currBoard[i][j] == 'W') {
-		    myCirc.setFill(Color.WHITE);
+		} else if (currBoard[i][j] == 'O') {
+		    myCirc.setFill(Color.BLUE);
 
 		} else {
-		    myCirc.setFill(Color.TRANSPARENT);
+		    myCirc.setFill(Color.WHITE);
 
 		}
 
