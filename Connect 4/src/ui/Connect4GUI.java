@@ -1,12 +1,11 @@
 package ui;
 
 import core.Connect4;
+import core.Connect4ComputerPlayer;
 import javafx.application.Application;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
-import javafx.scene.control.Alert;
-import javafx.scene.control.Alert.AlertType;
 import javafx.scene.layout.Background;
 import javafx.scene.layout.BackgroundFill;
 import javafx.scene.layout.Border;
@@ -24,6 +23,7 @@ public class Connect4GUI extends Application {
 
     private Connect4 myBoard;
     private boolean computerPlayer;
+    private boolean redTurn;
 
     // TODO: these seem arbitrary. Be sure to check that these actually make sense
     // in practice.
@@ -40,6 +40,8 @@ public class Connect4GUI extends Application {
 	// TODO: put in logic here to prompt the player whether they would like to play
 	// vs a pc.
 	this.computerPlayer = false;
+
+	this.redTurn = true;
 
 	playGame(primaryStage);
 
@@ -116,63 +118,69 @@ public class Connect4GUI extends Application {
     }
 
     private void makeMoves(Scene myScene) {
-	if (myController.canMove('W')) {
+	if (redTurn) {
+	    takeHumanTurn('X', myScene);
+	    playGame(primaryStage);
 
-	    // This makes it so that when the player clicks a square they get to
-	    // make a move.
-	    myScene.setOnMouseClicked((event) -> {
-		int x = (int) Math.round(event.getSceneX());
-		int y = (int) Math.round(event.getSceneY());
+	} else if (!redTurn && computerPlayer) {
+	    Connect4ComputerPlayer.takeTurn(myBoard, 'O');
+	    playGame(primaryStage);
 
-		// This insures we have a valid position on which to click.
-		if ((x > INSET) && (x < PANESIZE - INSET) && (y > MENUSIZE + INSET)
-			&& (y < MENUSIZE + (PANESIZE - INSET))) {
-
-		    // This converts the click from pixels to grid position.
-		    int mathX = (x - INSET) / TILESIZE;
-		    int mathY = (y - MENUSIZE - INSET) / TILESIZE;
-		    takeHumanMove(mathX, mathY);
-		}
-
-	    });
-
-	    // This is so the computer can move if the human can't.
-	} else if (myController.canMove('B')) {
-	    myController.computerTurn();
-	    update(myModel, myBoard);
-
-	    // If no one has a move, the game is over.
 	} else {
-	    Alert gameOver = new Alert(AlertType.INFORMATION);
-	    gameOver.setTitle("Game Over");
+	    takeHumanTurn('O', myScene);
+	    playGame(primaryStage);
 
-	    int[] score = myController.getScore();
-
-	    if (score[0] > score[1]) {
-		gameOver.setHeaderText("You win");
-		gameOver.setContentText("Even a broken watch is right twice a day.");
-
-	    } else if (score[0] < score[1]) {
-		gameOver.setHeaderText("You lose!");
-		gameOver.setContentText("You always were a dissapointment");
-
-	    } else {
-		gameOver.setHeaderText("You tie");
-		gameOver.setContentText("I am deeply unsatisfied with this outcome.");
-	    }
-
-	    gameOver.showAndWait();
-
-	    this.gameIsOver = true;
-
-	    File file = new File("save_data.dat");
-	    if (file.exists()) {
-		file.delete();
-	    }
+	    // TODO: this block needs to be adapted for the win/loss/tie condition of this
+	    // game.
+	    /**
+	     * // If no one has a move, the game is over. } else { Alert gameOver = new
+	     * Alert(AlertType.INFORMATION); gameOver.setTitle("Game Over");
+	     * 
+	     * int[] score = myController.getScore();
+	     * 
+	     * if (score[0] > score[1]) { gameOver.setHeaderText("You win");
+	     * gameOver.setContentText("Even a broken watch is right twice a day.");
+	     * 
+	     * } else if (score[0] < score[1]) { gameOver.setHeaderText("You lose!");
+	     * gameOver.setContentText("You always were a dissapointment");
+	     * 
+	     * } else { gameOver.setHeaderText("You tie"); gameOver.setContentText("I am
+	     * deeply unsatisfied with this outcome."); }
+	     * 
+	     * gameOver.showAndWait();
+	     * 
+	     * }
+	     */
 
 	    return;
 
 	}
+
+    }
+
+    private void takeHumanTurn(char player, Scene myScene) {
+	// TODO: edit so that we don't look for the y element except as a check for out
+	// of bounds.
+
+	// This makes it so that when the player clicks a square they get to
+	// make a move.
+	myScene.setOnMouseClicked((event) -> {
+	    int x = (int) Math.round(event.getSceneX());
+	    int y = (int) Math.round(event.getSceneY());
+
+	    // This insures we have a valid position on which to click.
+	    if ((x > INSET) && (x < PANESIZE - INSET) && (y > INSET) && (y < (PANESIZE - INSET))) {
+
+		// This converts the click from pixels to grid position.
+		int mathX = (x - INSET) / TILESIZE;
+
+		// TODO: modify this for error checking.
+		myBoard.addPiece(mathX, player);
+		redTurn = false;
+
+	    }
+
+	});
 
     }
 
