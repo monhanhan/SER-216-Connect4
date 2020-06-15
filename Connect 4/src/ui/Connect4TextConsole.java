@@ -4,6 +4,7 @@ import java.util.Scanner;
 
 import core.Connect4;
 import core.Connect4ComputerPlayer;
+import javafx.application.Application;
 
 /**
  * 
@@ -18,6 +19,48 @@ public class Connect4TextConsole {
      * @param args is unused.
      */
     public static void main(String[] args) {
+	Scanner myScanner = new Scanner(System.in);
+
+	if (chooseGUI(myScanner)) {
+	    Application.launch(Connect4GUI.class);
+	    myScanner.close();
+
+	} else
+
+	{
+	    playTextGame(myScanner);
+	}
+
+    }
+
+    private static boolean chooseGUI(Scanner myScanner) {
+	boolean badInput = true;
+	boolean chooseGUI = false;
+
+	while (badInput) {
+	    System.out.print("Would you like to play using a GUI? Press 'G' for GUI or 'T' for text only");
+	    System.out.println();
+	    System.out.println();
+	    System.out.print(">>");
+
+	    String myInput = myScanner.next();
+
+	    System.out.println();
+	    System.out.println();
+
+	    // Cleaning string.
+	    myInput = myInput.toUpperCase().trim();
+
+	    if ((myInput.equals("G")) || (myInput.equals("T"))) {
+		badInput = false;
+		chooseGUI = (myInput.equals("G"));
+	    }
+	}
+
+	return chooseGUI;
+    }
+
+    private static void playTextGame(Scanner myScanner) {
 	// Create a new instance of the game.
 	Connect4 myGame = new Connect4();
 
@@ -25,7 +68,6 @@ public class Connect4TextConsole {
 	printGameStart();
 
 	char player = 'Q';
-	Scanner myScanner = new Scanner(System.in);
 
 	boolean playComputer = playComputer(myScanner);
 
