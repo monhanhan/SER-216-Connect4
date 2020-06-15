@@ -42,27 +42,20 @@ public class Connect4GUI extends Application {
     public void start(Stage primaryStage) throws Exception {
 	this.myBoard = new Connect4();
 
-	boolean choiceMade = false;
+	Alert computerChoice = new Alert(Alert.AlertType.CONFIRMATION);
+	computerChoice.setTitle("Play against computer");
+	computerChoice.setHeaderText("Press ok to play against a computer or cancel to play against a human");
+	computerChoice.setContentText(
+		"If you close this window without making a choice, you will play against a human by default.");
 
-	while (!choiceMade) {
-	    Alert computerChoice = new Alert(Alert.AlertType.CONFIRMATION);
-	    computerChoice.setTitle("Play against computer");
-	    computerChoice.setHeaderText("Press ok to play against a computer or cancel to play against a human");
-	    computerChoice.setContentText(
-		    "If you close this window without making a choice, you will play against a human by default.");
+	Optional<ButtonType> result = computerChoice.showAndWait();
+	ButtonType button = result.orElse(ButtonType.CANCEL);
 
-	    Optional<ButtonType> result = computerChoice.showAndWait();
-	    ButtonType button = result.orElse(ButtonType.CANCEL);
+	if (button == ButtonType.OK) {
+	    this.computerPlayer = true;
 
-	    if (button == ButtonType.OK) {
-		choiceMade = true;
-		this.computerPlayer = true;
-
-	    } else if (button == ButtonType.CANCEL) {
-		choiceMade = true;
-		this.computerPlayer = false;
-	    }
-
+	} else if (button == ButtonType.CANCEL) {
+	    this.computerPlayer = false;
 	}
 
 	this.redTurn = true;
@@ -158,6 +151,7 @@ public class Connect4GUI extends Application {
     private void computerTurn(Scene myScene) {
 	Connect4ComputerPlayer.takeTurn(myBoard, 'O');
 	redTurn = true;
+	System.out.println("We reached this spot!");
 	playGame(primaryStage);
     }
 

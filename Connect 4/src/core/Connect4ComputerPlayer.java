@@ -26,12 +26,12 @@ public class Connect4ComputerPlayer {
 	    currCol++;
 	}
 
-	// System.out.println("Computer turn");
-	// System.out.print("The computer has placed a peice in column ");
+	System.out.println("Computer turn");
+	System.out.print("The computer has placed a peice in column ");
 
-	// int placedCol = currCol;
+	int placedCol = currCol;
 
-	// System.out.println(placedCol);
+	System.out.println(placedCol);
 
     }
 
