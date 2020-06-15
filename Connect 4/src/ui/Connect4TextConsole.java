@@ -9,7 +9,7 @@ import javafx.application.Application;
 /**
  * 
  * @author Ryan Munin
- * @version 2.0
+ * @version 3.0
  *
  */
 public class Connect4TextConsole {
@@ -33,6 +33,14 @@ public class Connect4TextConsole {
 
     }
 
+    /**
+     * This method asks the player if they would like to play with a GUI or
+     * text-based interface
+     * 
+     * @param myScanner is a scanner object
+     * @return is a boolean representation of whether the player wants to play with
+     *         a GUI
+     */
     private static boolean chooseGUI(Scanner myScanner) {
 	boolean badInput = true;
 	boolean chooseGUI = false;
@@ -60,6 +68,11 @@ public class Connect4TextConsole {
 	return chooseGUI;
     }
 
+    /**
+     * This handles the logic for playing a text based game of connect4
+     * 
+     * @param myScanner scanner
+     */
     private static void playTextGame(Scanner myScanner) {
 	// Create a new instance of the game.
 	Connect4 myGame = new Connect4();
@@ -90,7 +103,11 @@ public class Connect4TextConsole {
 	    // This is if statement enables a computer turn if the player has opted to play
 	    // against a computer and if it is the computer's turn.
 	    if ((player == 'O') && playComputer) {
+		System.out.println();
+		System.out.println("Computer turn");
+		System.out.println();
 		Connect4ComputerPlayer.takeTurn(myGame, player);
+		System.out.println();
 
 	    } else {
 		takeTurn(player, myScanner, myGame);

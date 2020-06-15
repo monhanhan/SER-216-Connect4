@@ -23,6 +23,17 @@ import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
 import javafx.stage.Stage;
 
+/**
+ * 
+ * @author Ryan Munin
+ * @version 1.0
+ * 
+ *          This class provides a GUI for the Connect4 game. It allows the
+ *          player to select if they would prefer to play against a computer or
+ *          another human. It then allows the player to play the game by
+ *          clicking on the column in which they want their piece to go.
+ *
+ */
 public class Connect4GUI extends Application {
     Stage primaryStage;
 
@@ -30,18 +41,20 @@ public class Connect4GUI extends Application {
     private boolean computerPlayer;
     private boolean redTurn;
 
-    // TODO: these seem arbitrary. Be sure to check that these actually make sense
-    // in practice.
     // These exist here so that I don't have any magic numbers and to make changing
     // the scale easier if I need to do that later.
     private final int PANESIZE = 338;
     private final int INSET = 8;
     private final int TILESIZE = 46;
 
+    /**
+     * This starts the application.
+     */
     @Override
     public void start(Stage primaryStage) throws Exception {
 	this.myBoard = new Connect4();
 
+	// This generates an alert to let the player pick their opponent.
 	Alert computerChoice = new Alert(Alert.AlertType.CONFIRMATION);
 	computerChoice.setTitle("Play against computer");
 	computerChoice.setHeaderText("Press ok to play against a computer or cancel to play against a human");
@@ -64,6 +77,12 @@ public class Connect4GUI extends Application {
 
     }
 
+    /**
+     * This handles the logic to draw and redraw the game as well as setting up the
+     * buttons the player will need to click on.
+     * 
+     * @param primaryStage
+     */
     public void playGame(Stage primaryStage) {
 	BorderPane myBorders = makeBorders();
 
@@ -79,6 +98,12 @@ public class Connect4GUI extends Application {
 
     }
 
+    /**
+     * This sets up a BorderPane to hold the smaller panes that will make up our
+     * grid.
+     * 
+     * @return BorderPane
+     */
     private BorderPane makeBorders() {
 	TilePane myTiles = makePanes();
 	myTiles.setMaxSize(PANESIZE, PANESIZE);
@@ -92,6 +117,12 @@ public class Connect4GUI extends Application {
 
     }
 
+    /**
+     * This makes TilePanes that are colored correctly depending on which player has
+     * a piece in a given spot.
+     * 
+     * @return is a TilePane with circles of the appropriate colors.
+     */
     private TilePane makePanes() {
 	char[][] currBoard = myBoard.getBoard();
 
@@ -134,12 +165,22 @@ public class Connect4GUI extends Application {
 
     }
 
+    /**
+     * This makes the computer move and then returns control to the player.
+     * 
+     * @param myScene is the current scene we are using.
+     */
     private void computerTurn(Scene myScene) {
 	Connect4ComputerPlayer.takeTurn(myBoard, 'O');
 	redTurn = true;
 
     }
 
+    /**
+     * This checks if a game is over and displays an alert accordingly.
+     * 
+     * @param myScene is the scene in use.
+     */
     private void checkGameOver(Scene myScene) {
 	boolean win = myBoard.checkVictory();
 	boolean tie = myBoard.checkTie();
@@ -166,6 +207,12 @@ public class Connect4GUI extends Application {
 
     }
 
+    /**
+     * This handles the logic for players making moves. If the player is playing
+     * against the computer, the computer moves immediately after the player does.
+     * 
+     * @param myScene is the Scene object currently in use.
+     */
     private void makeMoves(Scene myScene) {
 	char player;
 	if (redTurn) {
